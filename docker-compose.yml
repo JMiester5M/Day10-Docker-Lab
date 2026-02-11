@@ -1,0 +1,21 @@
+services:
+  web:
+    build: .
+    environment:
+      - DATABASE_URL='postgresql://neondb_owner:npg_gZnB4DE7ukNU@ep-royal-lake-aidbfta7-pooler.c-4.us-east-1.aws.neon.tech/Docker-Test?sslmode=require&channel_binding=require'
+    depends_on:
+      db:
+        condition: service_healthy
+  
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_PASSWORD=npg_gZnB4DE7ukNU
+      - POSTGRES_DB=Docker-Test?sslmode=require&channel_binding=require
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+
+volumes:
+  pgdata:
